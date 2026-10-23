@@ -1,0 +1,9 @@
+Konfigurasi pin iMCLab (DIPASTIKAN dari program dosen, folder UTS/referensi_dosen):
+  IN1 = GPIO 27, IN2 = GPIO 26, EN (PWM) = GPIO 12, PWM 30 kHz 8-bit
+  Arah maju     : IN1 HIGH, IN2 LOW
+  ENCODER       = GPIO 13, INPUT_PULLUP, interrupt FALLING, debounce 500 us
+  Lubang piringan = 2 per putaran
+  LED           = GPIO 2
+  USB-serial    = Silicon Labs CP210x
+Catatan: GPIO 12 adalah strapping pin ESP32 (menentukan tegangan flash saat boot).
+Jika board gagal boot/upload, coba upload dengan adaptor DC dicabut.

@@ -1,0 +1,10 @@
+pin,nama,tipe,min,max,satuan,widget,arah,keterangan
+V0,RPM,Double,0,10000,RPM,Gauge + SuperChart,device->app,sama dengan template kelas
+V1,PWM,Integer,0,255,-,Label + Chart,device->app,sama dengan template kelas
+V2,PWM_Slider,Integer,0,255,-,Slider,app->device,sama dengan template kelas (mode manual)
+V3,Motor_ONOFF,Integer,0,1,-,Switch,app->device,sama dengan template kelas
+V4,SetPoint,Integer,0,9000,RPM,Slider,app->device,tambahan: setpoint mode PI
+V5,Mode,Integer,0,1,-,Switch,app->device,tambahan: 0 manual / 1 PI
+V6,Kc,Double,0,1,PWM/RPM,Numeric Input,app->device,tambahan
+V7,tauI,Double,0.01,5,s,Numeric Input,app->device,tambahan
+V8,Status,String,,,-,Label,device->app,tambahan

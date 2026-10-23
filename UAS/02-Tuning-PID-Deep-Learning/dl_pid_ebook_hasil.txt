@@ -1,0 +1,3 @@
+Prediksi DL untuk input [e=1, delta_e=1]: Kc=0.2294, tauI=4.2041, tauD=0.1440
+Label target ebook             : Kc=0.25,   tauI=4.31,   tauD=0.20
+Respons: PV akhir=3.999 (SP=4), overshoot=-0.0%, IAE=18.32

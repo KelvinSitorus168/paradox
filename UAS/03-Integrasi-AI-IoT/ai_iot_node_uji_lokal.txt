@@ -1,0 +1,2 @@
+[AI] model dilatih dari 800 sampel; sigma=0.0030
+[AI] sampel 711: ANOMALI: perilaku plant tidak sesuai model (residual=-0.0225)

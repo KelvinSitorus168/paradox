@@ -1,0 +1,8 @@
+SUMBER: simulasi (parameter motor asumsi)
+B1 Lokal ESP32 (Ts 50 ms, delay 0): IAE = 497 RPM·s, ayunan pada SP 4000 (t 2,5–4 s) = 0 RPM, waktu capai 90 % = 0.45 s, PWM min/max = 0/255
+B1 Remote cloud (Ts 0,1 s, delay 0,3 s): IAE = 27269 RPM·s, ayunan pada SP 4000 (t 2,5–4 s) = 11343 RPM, waktu capai 90 % = 0.10 s, PWM min/max = -255/255
+B1 Remote cloud (Ts 0,1 s, delay 0,8 s): IAE = 47376 RPM·s, ayunan pada SP 4000 (t 2,5–4 s) = 18527 RPM, waktu capai 90 % = 0.40 s, PWM min/max = -255/255
+B1 Remote 0,3 s, PI ditala ulang (Kc=0.0044): IAE = 5956 RPM·s, ayunan pada SP 4000 (t 2,5–4 s) = 434 RPM, waktu capai 90 % = 2.30 s, PWM min/max = 0/126
+B2 interval 0.2 s: 10.0 nilai/detik ke server, 36000 nilai/jam
+B2 interval 0.5 s: 4.0 nilai/detik ke server, 14400 nilai/jam
+B2 interval 2 s: 1.0 nilai/detik ke server, 3600 nilai/jam

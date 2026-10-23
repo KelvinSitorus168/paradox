@@ -1,0 +1,22 @@
+Run berhasil (akurasi 100%): 3/10 seed
+Seed | loss akhir | akurasi
+   0 | 0.4774     | 75%
+   1 | 0.0001     | 100%
+   2 | 0.3466     | 75%
+   3 | 0.3467     | 50%
+   4 | 0.4774     | 75%
+   5 | 0.0001     | 100%
+   6 | 0.3467     | 75%
+   7 | 0.4774     | 75%
+   8 | 0.4774     | 75%
+   9 | 0.0002     | 100%
+
+Model terbaik: seed 1
+Input  Target  Prediksi  Dibulatkan
+[0 0]   0      0.0001    0
+[0 1]   1      0.9999    1
+[1 0]   1      0.9999    1
+[1 1]   0      0.0001    0
+
+Loss akhir: 0.00007   Akurasi: 100%
+Jumlah parameter: 15

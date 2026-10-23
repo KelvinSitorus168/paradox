@@ -1,0 +1,5 @@
+Parameter ARX (a1,a2,b1,b2,c): [0.49247, 0.49498, 0.00448, 0.00177, 0.28905]
+Sigma residual (rata-rata 30 sampel): 0.0027 °C, ambang = 0.0110 °C
+Gangguan (a) sensor glitch t=400 s  -> terdeteksi t=404 s (delay 4 s)
+Gangguan (b) heater turun t=800 s   -> terdeteksi t=808 s (delay 8 s)
+Alarm palsu di periode normal: 0 sampel

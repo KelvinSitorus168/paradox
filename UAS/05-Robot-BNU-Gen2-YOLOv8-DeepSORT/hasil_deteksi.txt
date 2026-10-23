@@ -1,0 +1,5 @@
+bus.jpg: {'bus': 1, 'person': 3}  (147 ms/gambar)
+   bus          conf=0.87  box=(23,231,805,757)
+   person       conf=0.87  box=(49,399,245,903)
+   person       conf=0.85  box=(669,392,810,877)
+   person       conf=0.83  box=(222,406,345,858)

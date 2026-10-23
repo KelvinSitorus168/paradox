@@ -1,0 +1,7 @@
+Contoh inverse kinematics Kiwi drive (rad/s per roda):
+  maju 0.2 m/s         -> roda = [-4.95, -0.0, 4.95]  | FK kembali = [0.2, -0.0, 0.0]
+  geser kiri 0.2 m/s   -> roda = [2.86, -5.71, 2.86]  | FK kembali = [-0.0, 0.2, -0.0]
+  putar 1 rad/s        -> roda = [4.17, 4.17, 4.17]  | FK kembali = [-0.0, -0.0, 1.0]
+
+Omni  : waktu tempuh persegi = 20.0 s, error posisi akhir = 0.0 mm, orientasi akhir = 0.0°
+Diff  : waktu tempuh persegi = 28.0 s, error posisi akhir = 0.0 mm, total rotasi = 360° (berhenti & berputar 4 x 90°)

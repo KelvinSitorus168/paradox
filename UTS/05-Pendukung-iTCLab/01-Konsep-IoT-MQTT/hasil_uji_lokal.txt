@@ -1,0 +1,8 @@
+[CONNECT] kode=Success
+[SUBSCRIBE] Suhu1
+[SUBSCRIBE] heater1
+[TERIMA] Suhu1: 25.47
+[TERIMA] Suhu1: 25.35
+[TERIMA] Suhu1: 25.77
+[TERIMA] Suhu1: 25.74
+[TERIMA] Suhu1: 25.62

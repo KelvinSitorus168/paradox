@@ -1,0 +1,3 @@
+SUMBER: kit asli
+E2 kurva statis: pwm_mulai_berputar=170, pwm_terakhir_diam=160, gain_rpm_per_pwm=139.6, r2=0.9659, rpm_max=1.188e+04, rpm_pwm200=6180
+E3 respons step: rpm_awal_terbaca_ms=240, rpm_akhir=5644, t_akhir_s=1.49, K_fit=6348, tau_fit_s=0.6398, theta_fit_s=0.09523, rmse_fit=15.14, tau_Kdari_E2_s=0.5927, theta_Kdari_E2_s=0.1075, persen_steady_di_akhir=91.33

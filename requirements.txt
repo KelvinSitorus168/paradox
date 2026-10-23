@@ -1,0 +1,11 @@
+numpy
+scipy
+matplotlib
+pyserial
+paho-mqtt>=2.0
+tensorflow>=2.15
+numba
+ultralytics>=8.1
+deep-sort-realtime
+setuptools<81        # deep-sort-realtime masih memakai pkg_resources
+opencv-python

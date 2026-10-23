@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Kendali Robot BNU</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/paho-mqtt/1.0.1/mqttws31.min.js"></script>
+<style>
+  body{font-family:system-ui,sans-serif;background:#111;color:#eee;text-align:center;margin:0;padding:16px}
+  .pad{display:grid;grid-template-columns:repeat(3,90px);gap:10px;justify-content:center;margin:24px auto}
+  button{height:80px;font-size:16px;border:0;border-radius:12px;background:#2a6;color:#fff;font-weight:600}
+  button.stop{background:#c33} button:active{filter:brightness(1.3)}
+  #st{margin-top:8px;color:#9c9}
+</style>
+</head>
+<body>
+<h2>Robot BNU — Web Control (MQTT)</h2>
+<div>Status koneksi: <span id="conn">menghubungkan…</span></div>
+<div class="pad">
+  <span></span><button data-c="MAJU">MAJU</button><span></span>
+  <button data-c="KIRI">KIRI</button><button class="stop" data-c="STOP">STOP</button><button data-c="KANAN">KANAN</button>
+  <span></span><button data-c="MUNDUR">MUNDUR</button><span></span>
+</div>
+<div>Kecepatan: <input id="spd" type="range" min="300" max="1023" value="800"></div>
+<div id="st">Status robot: -</div>
+<script>
+const PREFIX = "kelvin341/bnu/";
+const client = new Paho.MQTT.Client("broker.hivemq.com", 8884, "/mqtt", "web-" + Math.floor(Math.random()*1e5));
+client.onMessageArrived = m => document.getElementById("st").textContent = "Status robot: " + m.payloadString;
+client.onConnectionLost = () => document.getElementById("conn").textContent = "terputus";
+client.connect({useSSL: true, onSuccess: () => {
+  document.getElementById("conn").textContent = "terhubung";
+  client.subscribe(PREFIX + "status");
+}});
+function send(topic, payload){ const m = new Paho.MQTT.Message(payload); m.destinationName = PREFIX + topic; client.send(m); }
+let timer = null;
+document.querySelectorAll("button").forEach(b => {
+  const c = b.dataset.c;
+  const start = e => { e.preventDefault(); send("cmd", c); if (c !== "STOP") timer = setInterval(() => send("cmd", c), 500); };
+  const stop = () => { clearInterval(timer); if (c !== "STOP") send("cmd", "STOP"); };
+  b.addEventListener("mousedown", start); b.addEventListener("touchstart", start);
+  b.addEventListener("mouseup", stop); b.addEventListener("touchend", stop); b.addEventListener("mouseleave", stop);
+});
+document.getElementById("spd").addEventListener("change", e => send("speed", e.target.value));
+</script>
+</body>
+</html>

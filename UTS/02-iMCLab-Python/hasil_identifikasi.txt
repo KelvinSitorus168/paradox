@@ -1,0 +1,2 @@
+SUMBER: simulasi
+Model FOPDT kecepatan iMCLab (PWM 100->180): Kp = 43.09 RPM/PWM, tau = 198 ms, theta = 0 ms, RMSE = 16.8 RPM

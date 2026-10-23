@@ -1,0 +1,2 @@
+Posisi akhir: x=-0.21 m, y=0.11 m, heading=99°, jarak tempuh=5.25 m
+Perintah diterima (jumlah langkah 50 ms): {'KANAN': 40, 'KIRI': 70, 'MAJU': 100, 'STOP': 49}

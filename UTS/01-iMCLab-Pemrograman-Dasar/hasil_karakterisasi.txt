@@ -1,0 +1,7 @@
+SUMBER: simulasi (parameter motor asumsi)
+E1 uji fungsi: rpm_maju_penuh=9478.86, rpm_mundur_penuh=-9478.86, waktu_berhenti_s=0.39, rpm_200=6568.60, rpm_255=9460.45
+E2 kurva statis: deadzone_pwm=40, gain_rpm_per_pwm=43.09, intercept=-1513, r2=1, rpm_max=9480
+E3 respons step: rpm_steady=7096, tau_s=0.2, rise_10_90_s=0.43, settling_4tau_s=0.8
+E4 jendela 1 s (program dosen): resolusi=30 RPM, galat RMS=2676.4 RPM
+E4 jendela 100 ms: resolusi=300 RPM, galat RMS=468.7 RPM
+E4 metode period (1 putaran): resolusi=0 RPM, galat RMS=188.4 RPM

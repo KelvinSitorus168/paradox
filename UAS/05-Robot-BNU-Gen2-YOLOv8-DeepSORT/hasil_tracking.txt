@@ -1,0 +1,3 @@
+Frame diproses: 120
+Jumlah frame per track ID: {'1': 97, '2': 37, '3': 119, '4': 119, '7': 55, '8': 76, '11': 17}
+Distribusi perintah robot: {'CARI': 1, 'KANAN': 4, 'KIRI': 56, 'MAJU': 52, 'STOP': 7}

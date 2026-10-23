@@ -1,0 +1,16 @@
+# Dataset 7 kelas seperti artikel Rasjid, Rahmat & Sihananto (2024)
+# Struktur folder (format YOLO, 1 file .txt label per gambar):
+#   dataset_bnu/images/train/*.jpg   dataset_bnu/labels/train/*.txt
+#   dataset_bnu/images/val/*.jpg     dataset_bnu/labels/val/*.txt
+# Label dibuat dengan Roboflow / LabelImg / CVAT, ±150 gambar per kelas.
+path: dataset_bnu
+train: images/train
+val: images/val
+names:
+  0: botol
+  1: kursi
+  2: manusia
+  3: pot
+  4: galon
+  5: tong_sampah
+  6: ember
