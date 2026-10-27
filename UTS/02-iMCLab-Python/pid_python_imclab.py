@@ -109,9 +109,10 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--sim", action="store_true")
     ap.add_argument("--port")
+    ap.add_argument("--from-csv", action="store_true", help="kit asli: buat ulang tabel & grafik dari pid_kit_data.csv")
     args = ap.parse_args()
     if not args.sim:
-        return main_kit(args.port)
+        return main_kit(args.port, args.from_csv)
 
     tau_c = 0.1
     Kc = TAU / (KP * (tau_c + THETA))
@@ -141,7 +142,7 @@ def main():
         rows.append(f"| {name} | {o1:.1f} % | {f(s1)} | {o2:.1f} % | {f(s2)} | {sse3:.0f} | {dip:.0f} |")
     table = "\n".join(rows)
     print(table)
-    open("hasil_pid_python.md", "w").write(("SUMBER: simulasi\n\n" if args.sim else "SUMBER: kit asli\n\n")
+    open("hasil_pid_python.md", "w", encoding="utf-8").write(("SUMBER: simulasi\n\n" if args.sim else "SUMBER: kit asli\n\n")
                                            + f"PI-IMC: Kc = {Kc:.4f} PWM/RPM, tauI = {tauI:.3f} s\n\n" + table + "\n")
 
     os.makedirs("img", exist_ok=True)
@@ -184,7 +185,7 @@ def kit_sp(t):
 def static_curve():
     """Kurva statis kit (modul 1, bagian A): PWM sebagai fungsi RPM, daerah berputar & belum jenuh."""
     pw, rp, sec = [], [], False
-    for line in open(STATIC_CSV):
+    for line in open(STATIC_CSV, encoding="utf-8"):
         line = line.strip()
         if line.startswith("# A"): sec = True; continue
         if line.startswith("# "): sec = sec and not line.startswith("# B"); continue
@@ -235,8 +236,16 @@ def kit_metrics(t, sp, pv):
     return out
 
 
-def main_kit(port):
-    from imclab import iMCLab
+
+
+def load_kit_csv(names):
+    """Baca ulang pid_kit_data.csv (hasil uji kit) untuk membuat tabel & grafik tanpa menjalankan motor."""
+    d = {n: [] for n in names}
+    for r in csv.DictReader(open(os.path.join(HERE, "pid_kit_data.csv"), encoding="utf-8")):
+        d[r["kasus"]].append([float(r[k]) for k in ("t_s", "setpoint", "rpm", "pwm", "pwm_feedforward")])
+    return {n: tuple(np.array(v).T) for n, v in d.items()}
+
+def main_kit(port, from_csv=False):
     mfile = os.path.join(HERE, "model_kit.json")
     if os.path.exists(mfile):
         m = json.load(open(mfile)); Kp, tau, theta = m["Kp"], m["tau"], m["theta"]
@@ -252,23 +261,27 @@ def main_kit(port):
     cases = [("PI + feedforward, Ts=50 ms", 0.05, True),
              ("PI saja, Ts=50 ms", 0.05, False),
              ("PI + feedforward, Ts=200 ms", 0.20, True)]
-    lab = iMCLab(port)
-    res = {}
-    for i, (name, Ts, use_ff) in enumerate(cases):
-        if i:
-            print("Menunggu motor berhenti (coasting) 15 s ...")
-            lab.pwm(0); time.sleep(15)
-        print(f"[{i+1}/{len(cases)}] {name} ... ({KIT_END:.0f} s)")
-        res[name] = run_kit(lab, PI(Kc, tauI, lo=-255, hi=255), Ts, ff if use_ff else None)
-        dt = np.diff(res[name][0])
-        print(f"    periode loop nyata: rata-rata {dt.mean()*1000:.0f} ms, maks {dt.max()*1000:.0f} ms")
-    lab.close()
+    if from_csv:
+        res = load_kit_csv([c[0] for c in cases])
+    else:
+        from imclab import iMCLab
+        lab = iMCLab(port)
+        res = {}
+        for i, (name, Ts, use_ff) in enumerate(cases):
+            if i:
+                print("Menunggu motor berhenti (coasting) 15 s ...")
+                lab.pwm(0); time.sleep(15)
+            print(f"[{i+1}/{len(cases)}] {name} ... ({KIT_END:.0f} s)")
+            res[name] = run_kit(lab, PI(Kc, tauI, lo=-255, hi=255), Ts, ff if use_ff else None)
+            dt = np.diff(res[name][0])
+            print(f"    periode loop nyata: rata-rata {dt.mean()*1000:.0f} ms, maks {dt.max()*1000:.0f} ms")
+        lab.close()
 
-    with open(os.path.join(HERE, "pid_kit_data.csv"), "w", newline="") as f:
-        w = csv.writer(f); w.writerow(["kasus", "t_s", "setpoint", "rpm", "pwm", "pwm_feedforward"])
-        for name, (t, sp, pv, u, uff) in res.items():
-            for row in zip(t, sp, pv, u, uff):
-                w.writerow([name] + [round(float(x), 4) for x in row])
+        with open(os.path.join(HERE, "pid_kit_data.csv"), "w", newline="") as f:
+            w = csv.writer(f); w.writerow(["kasus", "t_s", "setpoint", "rpm", "pwm", "pwm_feedforward"])
+            for name, (t, sp, pv, u, uff) in res.items():
+                for row in zip(t, sp, pv, u, uff):
+                    w.writerow([name] + [round(float(x), 4) for x in row])
 
     rows = ["| Kasus | " + " | ".join(f"Overshoot →{s} | Settling ±5 % (s) | Galat 1 s akhir" for s, _ in
                                         [(v, 0) for _, v in KIT_SP]) + " |",
@@ -280,7 +293,7 @@ def main_kit(port):
         rows.append(f"| {name} | " + " | ".join(cells) + " |")
     table = "\n".join(rows)
     print(table)
-    open(os.path.join(HERE, "hasil_pid_python_kit.md"), "w").write(
+    open(os.path.join(HERE, "hasil_pid_python_kit.md"), "w", encoding="utf-8").write(
         "SUMBER: kit asli\n\n" + f"Model: Kp={Kp:.1f} RPM/PWM, tau={tau:.3f} s, theta={theta:.3f} s [{src}]\n\n"
         + f"PI-SIMC: Kc = {Kc:.5f} PWM/RPM, tauI = {tauI:.3f} s\n\n" + table + "\n")
 

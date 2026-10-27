@@ -55,6 +55,7 @@ def main():
     lab.pwm(U0)
     print(f"Menstabilkan motor di PWM {U0} selama {PRE:.0f} s ...")
     for _ in range(int(PRE / TS)):
+        lab.pwm(U0)          # kirim ulang tiap siklus: firmware menghentikan motor jika 2 s tanpa perintah (watchdog)
         lab.step(TS)
     print(f"Step PWM {U0} -> {U1}, merekam {DUR:.0f} s ...")
     t0 = time.time()
@@ -81,7 +82,7 @@ def main():
            f"tau = {tau*1000:.0f} ms, theta = {theta*1000:.0f} ms, RMSE = {rmse:.1f} RPM")
     print(txt)
     tag = "" if args.sim else "_kit"
-    open(f"hasil_identifikasi{tag}.txt", "w").write(("SUMBER: simulasi\n" if args.sim else "SUMBER: kit asli\n") + txt + "\n")
+    open(f"hasil_identifikasi{tag}.txt", "w", encoding="utf-8").write(("SUMBER: simulasi\n" if args.sim else "SUMBER: kit asli\n") + txt + "\n")
     if not args.sim:
         json.dump({"Kp": Kp, "tau": tau, "theta": theta, "u0": U0, "u1": U1, "rpm0": float(y0), "rmse": rmse},
                   open("model_kit.json", "w"), indent=2)

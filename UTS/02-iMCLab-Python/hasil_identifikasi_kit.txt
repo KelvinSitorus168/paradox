@@ -1,0 +1,2 @@
+SUMBER: kit asli
+Model FOPDT kecepatan iMCLab (PWM 180->220): Kp = 93.28 RPM/PWM, tau = 403 ms, theta = 32 ms, RMSE = 50.8 RPM
