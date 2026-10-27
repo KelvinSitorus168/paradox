@@ -3,7 +3,8 @@
   monitoring RPM + kendali PWM manual (SAMA dengan program dosen) DITAMBAH
   mode kendali kecepatan otomatis (PI) yang berjalan LOKAL di ESP32.
 
-  Library: Blynk (Volodymyr Shymanskyy) >= 1.3 · Board: DOIT ESP32 DEVKIT V1
+  Library: Blynk (Library Manager: "Blynk by Blynk", diuji v1.4.0) · Board: DOIT ESP32 DEVKIT V1
+  WiFi harus 2,4 GHz. Isi token/WiFi hanya di salinan di luar repo, jangan di-commit.
 
   Datastream (V0–V3 sama dengan template kelas "IMCLab Test"):
     V0  RPM          double  0..10000   ESP32 -> app   Gauge + Chart
@@ -78,7 +79,8 @@ float readRPM() {                      // RPM dari median 5 waktu putaran terakh
 
 // ---------- state ----------
 const float TS = 0.05;                   // periode PI 50 ms
-float Kc = 0.0394, tauI = 0.211;         // awal dari modul 02 (ganti dgn hasil identifikasi kit)
+float Kc = 0.013, tauI = 0.40;           // dari identifikasi kit asli (modul 02): Kp 93 RPM/PWM, tau 0,40 s
+const float I_PRELOAD = 170;             // dead-zone kit: motor baru berputar dari diam di PWM ±170 (modul 01)
 float sp = 0, rpm = 0, I = 0;
 int dutyManual = 200, duty = 0, mode = 0;
 bool motorOn = false;
@@ -129,9 +131,9 @@ void status() {
 }
 
 BLYNK_WRITE(V2) { dutyManual = constrain(param.asInt(), 0, 255); status(); }
-BLYNK_WRITE(V3) { motorOn = param.asInt(); I = 0; status(); }
+BLYNK_WRITE(V3) { motorOn = param.asInt(); I = mode ? I_PRELOAD : 0; status(); }
 BLYNK_WRITE(V4) { sp = param.asFloat(); status(); }
-BLYNK_WRITE(V5) { mode = param.asInt(); I = 0; status(); }
+BLYNK_WRITE(V5) { mode = param.asInt(); I = mode ? I_PRELOAD : 0; status(); }
 BLYNK_WRITE(V6) { if (param.asFloat() > 0) Kc = param.asFloat(); }
 BLYNK_WRITE(V7) { if (param.asFloat() > 0) tauI = param.asFloat(); }
 
