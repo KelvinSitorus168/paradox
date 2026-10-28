@@ -11,10 +11,10 @@ Repositori ini berisi Project Report hasil belajar saya di mata kuliah Robotika.
 ## Sorotan Hasil
 | | |
 |---|---|
-| UTS M1 — karakterisasi motor iMCLab | dead-zone PWM < 40, 43 RPM/PWM, τ = 0,2 s; encoder 2 lubang → metode period |
-| UTS M2 — PI dari Python | overshoot ≤ 0,1 %, error 0 RPM; loop 200 ms → tidak stabil |
-| UTS M3 — Blynk | PI lokal IAE 497 vs lewat cloud (latensi 0,3 s) 27.269 → kendali harus lokal |
-| UTS M4 — OTA Blynk.Air | v1.0.0 → v1.1.0, dual-bank, motor berhenti sebelum update |
+| UTS M1 — karakterisasi motor iMCLab | kit asli: start dari diam di PWM 170, jenuh 11.880 RPM, τ ≈ 0,6 s; encoder 2 lubang → metode period |
+| UTS M2 — PI dari Python | kit asli: Kp 93 RPM/PWM, τ 0,4 s; error akhir ≤ 22 RPM; feedforward mempercepat start 1,65 s → 0,70 s (simulasi: loop 200 ms tidak stabil) |
+| UTS M3 — Blynk | kit asli: PI via Blynk menjaga RPM ≤ 0,33 % dari setpoint; simulasi: PI lokal IAE 497 vs cloud (0,3 s) 27.269 → kendali harus lokal |
+| UTS M4 — OTA Blynk.Air | v1.0.0 → v1.1.0 berhasil di kit asli (Blynk: *Success*), motor berhenti sebelum update |
 | UAS — PID dituning Deep Learning | IAE 620 (terbaik), settling 68 s, overshoot 1,1 % |
 | UAS — Deteksi anomali AI–IoT | sensor glitch 4 s, heater melemah 8 s, 0 alarm palsu |
 | UAS — YOLOv8 + DeepSORT | ID objek stabil 119/120 frame, perintah robot otomatis via MQTT |
@@ -22,10 +22,10 @@ Repositori ini berisi Project Report hasil belajar saya di mata kuliah Robotika.
 ## Struktur & Status
 | Bagian | Folder | Isi | Status |
 |---|---|---|---|
-| UTS | [01 iMCLab Pemrograman Dasar](UTS/01-iMCLab-Pemrograman-Dasar/) | PWM, arah, encoder, karakterisasi motor | ✅ · ⬜ data kit |
-| UTS | [02 iMCLab Python](UTS/02-iMCLab-Python/) | serial ESP32↔Python, identifikasi, PI | ✅ · ⬜ data kit |
-| UTS | [03 iMCLab Blynk](UTS/03-iMCLab-Blynk/) | dashboard Blynk, PI lokal, analisis latensi | ✅ · ⬜ akun Blynk |
-| UTS | [04 OTA Blynk](UTS/04-OTA-Blynk/) | Blynk.Air v1.0.0 → v1.1.0, ArduinoOTA | ✅ · ⬜ uji Blynk.Air |
+| UTS | [01 iMCLab Pemrograman Dasar](UTS/01-iMCLab-Pemrograman-Dasar/) | PWM, arah, encoder, karakterisasi motor | ✅ · ✅ uji kit |
+| UTS | [02 iMCLab Python](UTS/02-iMCLab-Python/) | serial ESP32↔Python, identifikasi, PI | ✅ · ✅ uji kit |
+| UTS | [03 iMCLab Blynk](UTS/03-iMCLab-Blynk/) | dashboard Blynk, PI lokal, analisis latensi | ✅ · ✅ uji kit (⬜ internet putus, latensi) |
+| UTS | [04 OTA Blynk](UTS/04-OTA-Blynk/) | Blynk.Air v1.0.0 → v1.1.0, ArduinoOTA | ✅ · ✅ OTA berhasil di kit |
 | UTS | [05 Pendukung iTCLab](UTS/05-Pendukung-iTCLab/) | MQTT, ESP32, iTCLab, PID, IoT (Ebook Jilid 1) | ✅ |
 | UTS | [Referensi dosen](UTS/referensi_dosen/) | program kelas iMCLab (serial, Python, Blynk), acuan pin | — |
 | UAS | [01 Deep Learning Dasar](UAS/01-Deep-Learning-Dasar/) | XOR Keras | ✅ |
@@ -37,7 +37,7 @@ Repositori ini berisi Project Report hasil belajar saya di mata kuliah Robotika.
 
 ✅ selesai · ⬜ menunggu uji hardware/akun saat praktikum
 
-> **Catatan metode:** hasil di repo ini berasal dari simulasi (model motor DC iMCLab dengan parameter motor asumsi, pin & encoder sesuai program dosen, model FOPDT iTCLab dari ebook), digital twin, dan broker MQTT lokal. Seluruh 19 sketch Arduino buatan sendiri lolos cek sintaks untuk ESP32 core 2.x & 3.x. Hasil uji pada kit fisik dan akun Blynk akan ditambahkan setelah praktikum.
+> **Catatan metode:** modul UTS 01–04 sudah diuji di **kit iMCLab asli** (27–28 Oktober 2026); data kit dan simulasi dipisahkan di tiap laporan (parameter simulasi ternyata berbeda jauh dari kit). Modul UAS dan analisis perbandingan masih berasal dari simulasi (model motor DC, model FOPDT iTCLab dari ebook), digital twin, dan broker MQTT lokal; uji robot/ROS menunggu praktikum. Seluruh sketch Arduino buatan sendiri lolos cek sintaks untuk ESP32 core 2.x & 3.x. Token Blynk dan WiFi tidak ada di repo (placeholder).
 
 ## Cara Menjalankan
 ```bash
