@@ -12,7 +12,8 @@
    3. Server mengirim URL firmware ke perangkat lewat pin internal InternalPinOTA
    4. ESP32 menghentikan motor, mengunduh .bin (HTTPClient), menulis ke slot flash
       cadangan (Update), verifikasi, lalu restart ke firmware baru
-  Board: DOIT ESP32 DEVKIT V1 · Partition Scheme: "Default 4MB with spiffs"
+  Library: "Blynk by Blynk" (diuji v1.4.0) · Board: DOIT ESP32 DEVKIT V1 · Partition Scheme: "Default 4MB with spiffs"
+  Isi token/WiFi hanya di salinan di luar repo, jangan di-commit.
   Datastream sama dengan modul 3 (V0–V8) + V9 = versi firmware (String)
 */
 #define BLYNK_TEMPLATE_ID   "TMPLxxxxxxx"        // dari Blynk.Console (jangan di-commit token asli!)
@@ -24,6 +25,7 @@
 #include <WiFi.h>
 #include <BlynkSimpleEsp32.h>
 #include <HTTPClient.h>
+#include <WiFiClientSecure.h>
 #include <Update.h>
 
 char ssid[] = "nama_wifi";
@@ -79,7 +81,8 @@ float readRPM() {                      // RPM dari median 5 waktu putaran terakh
 
 // ---------- state ----------
 const float TS = 0.05;                   // periode PI 50 ms
-float Kc = 0.0394, tauI = 0.211;         // awal dari modul 02 (ganti dgn hasil identifikasi kit)
+float Kc = 0.013, tauI = 0.40;           // dari identifikasi kit asli (modul 02): Kp 93 RPM/PWM, tau 0,40 s
+const float I_PRELOAD = 170;             // dead-zone kit: motor baru berputar dari diam di PWM ±170 (modul 01)
 float sp = 0, rpm = 0, I = 0;
 int dutyManual = 200, duty = 0, mode = 0;
 bool motorOn = false;
@@ -135,9 +138,9 @@ void status() {
 }
 
 BLYNK_WRITE(V2) { dutyManual = constrain(param.asInt(), 0, 255); status(); }
-BLYNK_WRITE(V3) { motorOn = param.asInt(); I = 0; status(); }
+BLYNK_WRITE(V3) { motorOn = param.asInt(); I = mode ? I_PRELOAD : 0; status(); }
 BLYNK_WRITE(V4) { sp = param.asFloat(); status(); }
-BLYNK_WRITE(V5) { mode = param.asInt(); I = 0; status(); }
+BLYNK_WRITE(V5) { mode = param.asInt(); I = mode ? I_PRELOAD : 0; status(); }
 BLYNK_WRITE(V6) { if (param.asFloat() > 0) Kc = param.asFloat(); }
 BLYNK_WRITE(V7) { if (param.asFloat() > 0) tauI = param.asFloat(); }
 
@@ -162,9 +165,13 @@ BLYNK_WRITE(InternalPinOTA) {
   Blynk.virtualWrite(V8, "OTA: mengunduh firmware...");
   Blynk.disconnect();                                  // hindari gangguan koneksi Blynk saat unduh
 
+  WiFiClientSecure secure;
+  secure.setInsecure();                                // sertifikat server TIDAK divalidasi (lihat README, keterbatasan)
   HTTPClient http;
-  http.begin(url);
+  http.setFollowRedirects(HTTPC_STRICT_FOLLOW_REDIRECTS);
+  if (url.startsWith("https")) http.begin(secure, url); else http.begin(url);
   int code = http.GET();
+  Serial.printf("[OTA] HTTP %d\n", code);
   if (code != HTTP_CODE_OK) { http.end(); return otaFail("HTTP error"); }
   int len = http.getSize();
   if (len <= 0) { http.end(); return otaFail("ukuran file 0"); }

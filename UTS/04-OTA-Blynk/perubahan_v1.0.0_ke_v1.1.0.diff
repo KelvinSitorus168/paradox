@@ -1,5 +1,5 @@
---- iMCLab_OTA_v1_0_0/iMCLab_OTA_v1_0_0.ino	2026-10-23 00:53:14.910823599 +0700
-+++ iMCLab_OTA_v1_1_0/iMCLab_OTA_v1_1_0.ino	2026-10-23 00:53:14.910231263 +0700
+--- iMCLab_OTA_v1_0_0/iMCLab_OTA_v1_0_0.ino
++++ iMCLab_OTA_v1_1_0/iMCLab_OTA_v1_1_0.ino
 @@ -1,6 +1,10 @@
  /*
 -  iMCLab_OTA_v1_0_0.ino — iMCLab + Blynk (modul 3) + update firmware Over-The-Air (Blynk.Air)
@@ -13,7 +13,7 @@
  
    Alur OTA Blynk.Air:
     1. Arduino IDE: Sketch > Export Compiled Binary  -> file .ino.bin
-@@ -14,7 +18,7 @@
+@@ -15,7 +19,7 @@
  #define BLYNK_TEMPLATE_ID   "TMPLxxxxxxx"        // dari Blynk.Console (jangan di-commit token asli!)
  #define BLYNK_TEMPLATE_NAME "IMCLab Test"
  #define BLYNK_AUTH_TOKEN    "ISI_AUTH_TOKEN"
@@ -22,7 +22,7 @@
  #define BLYNK_PRINT Serial
  
  #include <WiFi.h>
-@@ -80,6 +84,7 @@
+@@ -83,6 +87,7 @@
  int dutyManual = 200, duty = 0, mode = 0;
  bool motorOn = false;
  BlynkTimer timer;
@@ -30,7 +30,7 @@
  
  void pwmBegin() {
  #if ESP_ARDUINO_VERSION_MAJOR >= 3
-@@ -96,12 +101,16 @@
+@@ -99,12 +104,16 @@
  #endif
  }
  void applyMotor(int d) {
@@ -49,7 +49,7 @@
  // ---------- loop kendali LOKAL 50 ms (tetap jalan walau internet putus) ----------
  void controlTask() {
    rpm = readRPM();
-@@ -135,6 +144,8 @@
+@@ -138,6 +147,8 @@
  BLYNK_CONNECTED() {                      // ambil nilai terakhir dari server saat (re)connect
    Blynk.syncVirtual(V2, V3, V4, V5, V6, V7);
    Blynk.virtualWrite(V9, BLYNK_FIRMWARE_VERSION);       // tampilkan versi di dashboard
@@ -58,7 +58,7 @@
  }
  
  // ===================== OTA Blynk.Air =====================
-@@ -179,6 +190,7 @@
+@@ -186,6 +197,7 @@
    Blynk.begin(BLYNK_AUTH_TOKEN, ssid, pass);
    timer.setInterval(50L, controlTask);
    timer.setInterval(500L, sendTask);
